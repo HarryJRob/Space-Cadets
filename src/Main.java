@@ -1,14 +1,23 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class Main {
 
 	public static void main(String[] args) {
-		//email2Name();
+		//System.out.println(email2Name());
 		printNameList();
 	}
 
 	private static void printNameList() {
+		ArrayList<String> nameList = getNameList();
+		for (int i = 1; i < nameList.size(); i++) 
+			System.out.println(nameList.get(i));
+	}
+	
+	private static ArrayList<String> getNameList() {
+		ArrayList<String> nameList = new ArrayList<String>();
+		nameList.clear();
 		final String address = "http://www.ecs.soton.ac.uk/people/";
 		String str = getWebpage(address,750);
 		str = str.substring(str.indexOf("<tbody class=\"list\">"));
@@ -18,20 +27,21 @@ public class Main {
 			str = str.substring(str.indexOf("class=\"js-tableSort-name\"")+1);
 			String curName = str.substring(str.indexOf("href=\"/people/"), str.indexOf("</a>"));
 			curName = curName.substring(curName.indexOf(">")+1);
-			System.out.println(curName);
+			nameList.add(curName);
 		}
+		
+		return nameList;
 	}
 	
-	public static void email2Name() {
+	private static String email2Name() {
 		final String address = "http://www.ecs.soton.ac.uk/people/";
 		String str = getWebpage(address + getInput(),100);
 		str = str.substring(str.indexOf("property=\"name\">"));
 		str = str.substring(16,str.indexOf("<"));
-		
-		System.out.println(str);
+		return str;
 	}
 	
-	public static String getInput() {
+	private static String getInput() {
 		String str = "";
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -42,7 +52,7 @@ public class Main {
 		return str;
 	}
 	
-	public static String getWebpage(String linkStr, Integer lineNum) {
+	private static String getWebpage(String linkStr, Integer lineNum) {
 		lineNum = lineNum != null ? lineNum : -1;
 		String str = "";
 		
